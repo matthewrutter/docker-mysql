@@ -1,0 +1,37 @@
+version: '3'
+services:
+
+        # Database for the project
+        db:
+                # Use MySql 5 image for best compatability
+                image: mysql:5
+
+                ports:
+                        # Set the port to the default port for MYSQL and expose to same host port
+                        - "3306:3306"
+
+                environment:
+                        # Set the default root password for host access
+                        MYSQL_ROOT_PASSWORD: 'password'
+
+                volumes:
+                        # Run startup scripts to fill databases with required data
+                        - ./startup_scripts:/docker-entrypoint-initdb.d/
+
+                restart: always
+
+
+        # Admin tools for the above database
+        adminer:
+                
+                # Use the latest adminer image
+                image: adminer
+
+                ports:
+                        # Set the host port to 8080 and link it with port 8080 in the container
+                        - "8080:8080"
+                
+                restart: always
+
+
+

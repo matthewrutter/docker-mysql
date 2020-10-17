@@ -3,20 +3,12 @@ services:
 
         # Database for the project
         db:
-                # Use MySql 5 image
-                image: mysql:5
+                # Build database using file in db directory
+                build: ./db
 
                 # Set the port to the default port for MYSQL and expose to same host port
                 ports:
                         - "3306:3306"
-
-                # Set the default root password for host access
-                environment:
-                        MYSQL_ROOT_PASSWORD: "password"
-
-                # Run startup scripts to fill databases with required data. Put any .sql load scripts you want to run in the startup_scripts folder
-                volumes:
-                        - ./startup_scripts:/docker-entrypoint-initdb.d/
 
                 # Try to restart container if it crashes or stops
                 restart: always
@@ -31,6 +23,10 @@ services:
                 ports:
                         - "8080:8080"
                 
+                # Wait for the database to spin up
+                depends_on:
+                        - db
+
                 # Try to restart container if it crashes or stops
                 restart: always
 
